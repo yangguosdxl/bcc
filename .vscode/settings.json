@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.lua.txt": "lua",
+        "memleak.skel.h": "c"
+    }
+}

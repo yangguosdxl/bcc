@@ -8,7 +8,7 @@ BPFTOOL ?= $(BPFTOOL_OUTPUT)/bootstrap/bpftool
 LIBBPF_SRC := $(abspath ../src/cc/libbpf/src)
 LIBBPF_OBJ := $(abspath $(OUTPUT)/libbpf.a)
 LIBBLAZESYM_SRC := $(abspath blazesym/target/release/libblazesym.a)
-INCLUDES := -I$(OUTPUT) -I../src/cc/libbpf/include/uapi
+INCLUDES := -I$(OUTPUT) -I../src/cc/libbpf/include/uapi -Itbox/src -Itbox/build/linux/x86_64/release -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 CFLAGS := -g -O2 -Wall
 BPFCFLAGS := -g -O2 -Wall
 INSTALL ?= install
@@ -36,6 +36,7 @@ BZ_APPS = \
 	#
 
 APPS = \
+	mem \
 	bashreadline \
 	bindsnoop \
 	biolatency \
@@ -151,6 +152,8 @@ endif
 ifeq ($(USE_BLAZESYM),1)
 LDFLAGS += $(OUTPUT)/libblazesym.a -lrt -lpthread -ldl
 endif
+
+LDFLAGS += $(abspath tbox/build/linux/x86_64/release/libtbox.a) -lm -lglib-2.0
 
 .PHONY: clean
 clean:
