@@ -812,7 +812,7 @@ void print_stack_frames_by_syms_cache_my()
 		if (sym) {
 			fprintf(output_file, "%s", sym->name);
 		} else {
-			printf("<%016lx>", addr);
+			fprintf(output_file, "<%016lx>", addr);
 		}
 
 		if (dso_name)
@@ -911,18 +911,11 @@ void print_stack_frames_my(gpointer key, gpointer value, gpointer user_data)
 	stack_size = alloc->info.user_stack_size/sizeof(alloc->info.user_stack[0]);
 	stack = (uint64_t *)alloc->info.user_stack;
 
-	printf("%zu bytes in %zu allocations from stack\n", (uint64_t)alloc->info.size, alloc->count);
+	printf("\t%zu bytes in %zu allocations from stack\n", (uint64_t)alloc->info.size, alloc->count);
 
-	char fileName[128] = {0}; 
-	snprintf(fileName, 128, "func.mem.%d.txt", file_index);
-	output_file = fopen(fileName, "w");
-
-	(*print_stack_frames_func)();
+	print_stack_frames_by_syms_cache_my();
 
 	fprintf(output_file, " %zu\n", (uint64_t)alloc->info.size);
-
-	fclose(output_file);
-	output_file = NULL;
 }
 
 int print_outstanding_allocs_my(int allocs_fd)
@@ -978,7 +971,16 @@ int print_outstanding_allocs_my(int allocs_fd)
 		alloc->count++;
 	}
 
+	char fileName[128] = {0}; 
+	snprintf(fileName, 128, "mem.func.%d.txt", file_index);
+	output_file = fopen(fileName, "w");
+
+	printf("file index %d\n", file_index);
 	g_hash_table_foreach(allocMap, print_stack_frames_my, NULL);
+	printf("file index %d end\n", file_index);
+
+	fclose(output_file);
+	output_file = NULL;
 
 	g_hash_table_foreach(allocMap, destroy_my_allocation, NULL);
 
