@@ -7,3 +7,6 @@
 [submodule "libbpf-tools/blazesym"]
 	path = libbpf-tools/blazesym
 	url = https://github.com/libbpf/blazesym
+[submodule "libbpf-tools/tbox"]
+	path = libbpf-tools/tbox
+	url = https://github.com/tboox/tbox.git
